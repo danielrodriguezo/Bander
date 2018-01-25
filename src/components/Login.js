@@ -12,8 +12,12 @@ class Login extends Component {
         this[inputField]._root.focus();
     }
 
-    signIn() {
+    toggleLoading() {
         this.props.toggleLoading();
+    }
+
+    signIn() {
+        this.toggleLoading();
         const email = this.emailInput.props.value;
         const password = this.passwordInput.props.value;
         this.props.signIn({email, password});

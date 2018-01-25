@@ -37,7 +37,9 @@ class Signup extends Component {
 
     signUp() {
         this.toggleLoading();
-        this.props.signUp();
+        const email = this.emailInput.props.value;
+        const password = this.passwordInput.props.value;
+        this.props.signUp({email, password});
     }
 
     render() {
@@ -58,6 +60,7 @@ class Signup extends Component {
                         <Card>
                             <CardItem>
                                 <Body style={{paddingBottom: 15}}>
+                                { this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>}
                                 <Form>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>Email</Label>
@@ -172,6 +175,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         textAlign: 'center',
         fontWeight: '500'
+    },
+    error: {
+        marginTop: 10,
+        marginLeft: 15,
+        color: '#DD4B39',
+        fontSize: 13
     }
 });
 
