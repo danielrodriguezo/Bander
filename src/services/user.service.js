@@ -36,6 +36,7 @@ export const UserService = {
                     }
                 }, 2000);
             } else {
+                dispatch(AppStateActionCreator.toggleLoading(false));
                 dispatch(AppStateActionCreator.raiseError(true, formValid.error));
             }
         }
@@ -66,6 +67,7 @@ export const UserService = {
                     }
                 }, 2000);
             } else {
+                dispatch(AppStateActionCreator.toggleLoading(false));
                 dispatch(AppStateActionCreator.raiseError(true, formValid.error));
             }
         }

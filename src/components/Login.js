@@ -4,6 +4,7 @@ import {Button, Form, Icon, Input, Item, Label} from 'native-base';
 import {connect} from 'react-redux';
 import {UserService} from "../services/user.service";
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
+import Spinner from 'react-native-spinkit';
 
 class Login extends Component {
 
@@ -78,6 +79,14 @@ class Login extends Component {
                         </Button>
                     </View>
                 </View>
+                {
+                    this.props.app.isLoading &&
+                    <View style={styles.loading}>
+                        <Spinner style={{marginBottom: 30}} size={100}
+                                 type="ArcAlt" color="#D0789C"/>
+                        <Text style={styles.loadingText}>Please Wait...</Text>
+                    </View>
+                }
             </ScrollView>
         )
     }
@@ -149,6 +158,23 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         color: '#DD4B39',
         fontSize: 13
+    },
+    loading: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        opacity: 0.7,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    loadingText: {
+        color: '#D0789C',
+        fontSize: 17,
+        textAlign: 'center',
+        fontWeight: '500'
     }
 });
 
