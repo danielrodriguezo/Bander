@@ -20,6 +20,7 @@ import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
 import {UserService} from "../services/user.service";
 import Loading from "./Loading";
+import Error from "./Error";
 
 class Signup extends Component {
 
@@ -61,7 +62,7 @@ class Signup extends Component {
                         <Card>
                             <CardItem>
                                 <Body style={{paddingBottom: 15}}>
-                                { this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>}
+                                <Error/>
                                 <Form>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>Email</Label>
@@ -152,29 +153,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row'
-    },
-    loading: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: '#fff',
-        opacity: 0.7,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    loadingText: {
-        color: '#D0789C',
-        fontSize: 17,
-        textAlign: 'center',
-        fontWeight: '500'
-    },
-    error: {
-        marginTop: 10,
-        marginLeft: 15,
-        color: '#DD4B39',
-        fontSize: 13
     }
 });
 

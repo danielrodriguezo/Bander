@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {UserService} from "../services/user.service";
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
 import Loading from "./Loading";
+import Error from "./Error";
 
 class Login extends Component {
 
@@ -31,7 +32,7 @@ class Login extends Component {
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.header}>Login</Text>
-                    { this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>}
+                    <Error/>
                     <Form>
                         <Item floatingLabel style={{marginTop: 10}}>
                             <Label>Email</Label>
@@ -155,23 +156,6 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         color: '#DD4B39',
         fontSize: 13
-    },
-    loading: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: '#fff',
-        opacity: 0.7,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    loadingText: {
-        color: '#D0789C',
-        fontSize: 17,
-        textAlign: 'center',
-        fontWeight: '500'
     }
 });
 

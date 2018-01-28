@@ -18,7 +18,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
-import Spinner from 'react-native-spinkit';
+import Error from "./Error";
 import {UserService} from "../services/user.service";
 import Loading from "./Loading";
 
@@ -57,7 +57,7 @@ class ExtraSignUpData extends Component {
                         <Card>
                             <CardItem>
                                 <Body style={{paddingBottom: 15}}>
-                                { this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>}
+                                <Error/>
                                 <Form>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>First Name</Label>
@@ -92,7 +92,7 @@ class ExtraSignUpData extends Component {
                             </CardItem>
                         </Card>
                         <Button block rounded style={styles.button}
-                                onPress={() => this.signUp()}>
+                                onPress={() => this.setExtraSignupData()}>
                             <Text style={{color: '#fff', fontWeight: '300'}}>
                                 Next >> Pick your styles
                             </Text>
@@ -143,12 +143,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row'
-    },
-    error: {
-        marginTop: 10,
-        marginLeft: 15,
-        color: '#DD4B39',
-        fontSize: 13
     }
 });
 
