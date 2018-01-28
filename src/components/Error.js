@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {StyleSheet, Text} from 'react-native';
 
-class Loading extends Component {
+class Error extends Component {
     render() {
         return (
             this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>
@@ -31,4 +31,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Loading);
+export default connect(mapStateToProps, mapDispatchToProps)(Error);
