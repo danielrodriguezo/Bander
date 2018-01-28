@@ -4,10 +4,12 @@ import {Button} from 'native-base';
 import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
 import {UserService} from "../services/user.service";
+import reactMixin from 'react-mixin';
+import TimerMixin from 'react-timer-mixin';
 import Loading from "./Loading";
 
 const musicStyles = ['Classic Rock', 'Alternative', 'Rock', 'Hip-Hop/Rap', 'Techno', 'Metal', 'Blues'];
-
+const DOUBLE_PRESS_DELAY = 400;
 class PickStyles extends Component {
 
     componentDidMount() {
@@ -16,6 +18,18 @@ class PickStyles extends Component {
     toggleLoading() {
         this.props.toggleLoading();
     }
+
+    onDoublePress = () => {
+        if (this.pressTimeout) {
+            alert('double press');
+            this.clearTimeout(this.pressTimeout);
+            this.pressTimeout = null;
+        } else {
+            this.pressTimeout = this.setTimeout(() => {
+                alert('single press');
+            }, DOUBLE_PRESS_DELAY);
+        }
+    };
 
     render() {
         return (
@@ -26,7 +40,11 @@ class PickStyles extends Component {
                     <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                         {
                             musicStyles.map((style, index) => {
-                                return <Button key={index} style={[styles.bubble, {left: 150 * (index % 2), top: 150 * (Math.floor(index/2))}]}>
+                                return <Button
+                                    onLongPress={() => {alert('You longed pressed');}}
+                                    onPress={() => this.onDoublePress()}
+                                    key={index}
+                                    style={[styles.bubble, {left: 150 * (index % 2), top: 150 * (Math.floor(index/2))}]}>
                                     <Text style={{color: '#fff', textAlign: 'center'}}>{style}</Text>
                                 </Button>
                             })
@@ -62,6 +80,8 @@ const styles = StyleSheet.create({
         width: 150
     }
 });
+
+reactMixin(PickStyles.prototype, TimerMixin);
 
 const mapStateToProps = state => {
     return {
