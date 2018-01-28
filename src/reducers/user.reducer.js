@@ -1,4 +1,4 @@
-import {SIGN_UP, SIGN_IN} from '../constants/action-names';
+import {SIGN_UP, SIGN_IN, EXTRA_SIGNUP_DATA} from '../constants/action-names';
 
 const initialState = {
     id: -1
@@ -7,8 +7,8 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
         case SIGN_UP:
-            return {...state, ...action.payload};
         case SIGN_IN:
+        case EXTRA_SIGNUP_DATA:
             return {...state, ...action.payload};
         default:
             return state;

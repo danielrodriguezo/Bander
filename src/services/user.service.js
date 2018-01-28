@@ -71,5 +71,10 @@ export const UserService = {
                 dispatch(AppStateActionCreator.raiseError(true, formValid.error));
             }
         }
+    },
+    extraSignupData: (formData) => {
+        return (dispatch) => {
+            dispatch(UserActionCreator.extraSignupData(formData));
+        }
     }
 };

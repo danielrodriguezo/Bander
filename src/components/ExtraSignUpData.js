@@ -20,11 +20,12 @@ import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
 import Spinner from 'react-native-spinkit';
 import {UserService} from "../services/user.service";
+import Loading from "./Loading";
 
 class ExtraSignUpData extends Component {
 
     componentDidMount() {
-        console.log(this.props.user);
+        this.props.raiseError(false);
         this.firstName._root.focus();
     }
 
@@ -34,6 +35,15 @@ class ExtraSignUpData extends Component {
 
     toggleLoading() {
         this.props.toggleLoading();
+    }
+
+    setExtraSignupData() {
+        this.toggleLoading();
+        const firstName = this.firstName.props.value;
+        const lastName = this.lastName.props.value;
+        const country = this.country.props.value;
+        const city = this.city.props.value;
+        this.props.extraSignupData({firstName, lastName, country, city});
     }
 
     render() {
@@ -47,29 +57,34 @@ class ExtraSignUpData extends Component {
                         <Card>
                             <CardItem>
                                 <Body style={{paddingBottom: 15}}>
+                                { this.props.app.error && <Text style={styles.error}>{this.props.app.errorMessage}</Text>}
                                 <Form>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>First Name</Label>
                                         <Input getRef={(c) => this.firstName = c}
+                                               autoCorrect={false}
                                                onSubmitEditing={() => this._focusInput('lastName')}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>Last Name</Label>
                                         <Input getRef={(c) => this.lastName = c}
+                                               autoCorrect={false}
                                                onSubmitEditing={() => this._focusInput('country')}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>Country</Label>
                                         <Input getRef={(c) => this.country = c}
+                                               autoCorrect={false}
                                                onSubmitEditing={() => this._focusInput('city')}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>City</Label>
                                         <Input getRef={(c) => this.city = c}
-                                               returnKeyType='go'
+                                               autoCorrect={false}
+                                               onSubmitEditing={() => this.setExtraSignupData()}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
                                 </Form>
@@ -84,14 +99,7 @@ class ExtraSignUpData extends Component {
                         </Button>
                     </Content>
                 </View>
-                {
-                    this.props.app.isLoading &&
-                    <View style={styles.loading}>
-                        <Spinner style={{marginBottom: 30}} size={100}
-                                 type="ArcAlt" color="#D0789C"/>
-                        <Text style={styles.loadingText}>Please Wait...</Text>
-                    </View>
-                }
+                <Loading/>
             </ScrollView>
         )
     }
@@ -136,22 +144,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row'
     },
-    loading: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        backgroundColor: '#fff',
-        opacity: 0.7,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    loadingText: {
-        color: '#D0789C',
-        fontSize: 17,
-        textAlign: 'center',
-        fontWeight: '500'
+    error: {
+        marginTop: 10,
+        marginLeft: 15,
+        color: '#DD4B39',
+        fontSize: 13
     }
 });
 
@@ -164,11 +161,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        raiseError: (status, message) => {
+            dispatch(AppStateActionCreator.raiseError(status,message));
+        },
         toggleLoading: () => {
             dispatch(AppStateActionCreator.toggleLoading())
         },
-        signUp: () => {
-            dispatch(UserService.signUp())
+        extraSignupData: (formData) => {
+            dispatch(UserService.extraSignupData(formData))
         }
     }
 };

@@ -18,12 +18,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
-import Spinner from 'react-native-spinkit';
 import {UserService} from "../services/user.service";
+import Loading from "./Loading";
 
 class Signup extends Component {
 
     componentDidMount() {
+        this.props.raiseError(false);
         this.emailInput._root.focus();
     }
 
@@ -100,14 +101,7 @@ class Signup extends Component {
                         </View>
                     </Content>
                 </View>
-                {
-                    this.props.app.isLoading &&
-                    <View style={styles.loading}>
-                        <Spinner style={{marginBottom: 30}} size={100}
-                                 type="ArcAlt" color="#D0789C"/>
-                        <Text style={styles.loadingText}>Please Wait...</Text>
-                    </View>
-                }
+                <Loading/>
             </ScrollView>
         )
     }
@@ -193,6 +187,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        raiseError: (status, message) => {
+            dispatch(AppStateActionCreator.raiseError(status,message));
+        },
         toggleLoading: () => {
             dispatch(AppStateActionCreator.toggleLoading())
         },
