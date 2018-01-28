@@ -5,6 +5,7 @@ import ExtraSignUpData from "../components/ExtraSignUpData";
 import {BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import {addNavigationHelpers, NavigationActions, StackNavigator} from "react-navigation";
+import PickStyles from "../components/PickStyles";
 
 
 export const AppNavigator = StackNavigator(
@@ -12,6 +13,7 @@ export const AppNavigator = StackNavigator(
         Login: {screen: Login},
         Signup: {screen: Signup},
         ExtraSignUpData: {screen: ExtraSignUpData},
+        PickStyles: {screen: PickStyles},
     },
     {
         //drawerOpenRoute: 'DrawerOpen',

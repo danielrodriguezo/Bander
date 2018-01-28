@@ -75,6 +75,9 @@ export const UserService = {
     extraSignupData: (formData) => {
         return (dispatch) => {
             dispatch(UserActionCreator.extraSignupData(formData));
+            dispatch(AppStateActionCreator.toggleLoading(false));
+            dispatch(AppStateActionCreator.raiseError(false));
+            dispatch(NavigationActions.navigate({routeName: 'PickStyles'}));
         }
     }
 };

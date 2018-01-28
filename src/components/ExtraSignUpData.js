@@ -94,7 +94,7 @@ class ExtraSignUpData extends Component {
                         <Button block rounded style={styles.button}
                                 onPress={() => this.setExtraSignupData()}>
                             <Text style={{color: '#fff', fontWeight: '300'}}>
-                                Next >> Pick your styles
+                                Next » Pick your styles
                             </Text>
                         </Button>
                     </Content>
