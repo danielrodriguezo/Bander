@@ -1,18 +1,24 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'native-base';
 import {connect} from 'react-redux';
 import {AppStateActionCreator} from "../action-creators/app-state.action-creator";
-import {UserService} from "../services/user.service";
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
 import Loading from "./Loading";
 
 const musicStyles = ['Classic Rock', 'Alternative', 'Rock', 'Hip-Hop/Rap', 'Techno', 'Metal', 'Blues'];
 const DOUBLE_PRESS_DELAY = 400;
+
 class PickStyles extends Component {
 
     componentDidMount() {
+        this.setWindowWidth(Dimensions.get('window'));
+        Dimensions.addEventListener('change', this.setWindowWidth);
+    }
+
+    setWindowWidth({width}) {
+        this.width = width;
     }
 
     toggleLoading() {
@@ -33,23 +39,24 @@ class PickStyles extends Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={{padding: 15}}>
-                    <Text style={styles.header}>Tell us what you're into.</Text>
-                    <Text style={styles.subHeader}>Tap once on the genres you like, or twice on the ones you love. Press and hold the ones you don't.</Text>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        {
-                            musicStyles.map((style, index) => {
-                                return <Button
-                                    onLongPress={() => {alert('You longed pressed');}}
-                                    onPress={() => this.onDoublePress()}
-                                    key={index}
-                                    style={[styles.bubble, {left: 150 * (index % 2), top: 150 * (Math.floor(index/2))}]}>
-                                    <Text style={{color: '#fff', textAlign: 'center'}}>{style}</Text>
-                                </Button>
-                            })
-                        }
-                    </View>
+            <ScrollView style={{padding: 15}}>
+                <Text style={styles.header}>Tell us what you're into.</Text>
+                <Text style={styles.subHeader}>Tap once on the genres you like, or twice on the ones you love. Press and
+                    hold the ones you don't.</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    {
+                        musicStyles.map((style, index) => {
+                            return <Button
+                                onLongPress={() => {
+                                    alert('You longed pressed');
+                                }}
+                                onPress={() => this.onDoublePress()}
+                                key={index}
+                                style={[styles.bubble, {left: 150 * (index % 2), top: 150 * (Math.floor(index / 2))}]}>
+                                <Text style={{color: '#fff', textAlign: 'center'}}>{style}</Text>
+                            </Button>
+                        })
+                    }
                 </View>
                 <Loading/>
             </ScrollView>
