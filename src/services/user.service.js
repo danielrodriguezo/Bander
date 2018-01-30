@@ -34,7 +34,7 @@ export const UserService = {
                         dispatch(AppStateActionCreator.toggleLoading(false));
                         dispatch(AppStateActionCreator.raiseError(true, mockSignUpResponse.error ? mockSignUpResponse.error : 'Error'));
                     }
-                }, 2000);
+                }, 1);
             } else {
                 dispatch(AppStateActionCreator.toggleLoading(false));
                 dispatch(AppStateActionCreator.raiseError(true, formValid.error));
@@ -65,7 +65,7 @@ export const UserService = {
                         dispatch(AppStateActionCreator.toggleLoading(false));
                         dispatch(AppStateActionCreator.raiseError(true, mockSignInResponse.error ? mockSignInResponse.error : 'Error'));
                     }
-                }, 2000);
+                }, 1);
             } else {
                 dispatch(AppStateActionCreator.toggleLoading(false));
                 dispatch(AppStateActionCreator.raiseError(true, formValid.error));

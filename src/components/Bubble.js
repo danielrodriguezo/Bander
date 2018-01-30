@@ -22,7 +22,7 @@ export default class Bubble extends Component {
     }
 
     getBubbleStyle() {
-        const random = Math.floor(Math.random() * 60) + 90;
+        const random = Math.floor(Math.random() * 60) + 130;
         return {
             width: random,
             height: random,
