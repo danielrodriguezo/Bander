@@ -52,7 +52,7 @@ class PickStyles extends Component {
         return (
             <ScrollView style={{padding: 15}}>
                 <Button transparent style={{marginTop: 15, flexDirection: 'row', alignSelf: 'flex-end', flex: 1}}
-                    onPress={this.onPickStylesDone}>
+                    onPress={() => this.onPickStylesDone()}>
                     <Text style={styles.done}>Done</Text>
                 </Button>
                 <Text style={styles.header}>Tell us what you're into.</Text>
@@ -62,14 +62,16 @@ class PickStyles extends Component {
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                     {
                         musicStyles.map((genre, index) => {
-                            return index % 2 === 0 && <Bubble text={genre} index={index} key={index} onSelect={this.onBubbleSelect}/>
+                            const random = Math.floor(Math.random() * 60) + 130;
+                            return index % 2 === 0 && <Bubble text={genre} index={index} key={index} size={random} onSelect={this.onBubbleSelect}/>
                         })
                     }
                     </View>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                     {
                         musicStyles.map((genre, index) => {
-                            return index % 2 === 1 && <Bubble text={genre} index={index} key={index} onSelect={this.onBubbleSelect}/>
+                            const random = Math.floor(Math.random() * 60) + 130;
+                            return index % 2 === 1 && <Bubble text={genre} index={index} key={index} size={random} onSelect={this.onBubbleSelect}/>
                         })
                     }
                     </View>

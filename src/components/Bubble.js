@@ -7,41 +7,58 @@ const DOUBLE_PRESS_DELAY = 400;
 
 export default class Bubble extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            color: '#D0789C'
+        }
+    }
 
     onDoublePress() {
         if (this.pressTimeout) {
-            this.onSelect('double');
+            this.propagateOnSelect('double');
+            this.setColor('#f0262c');
             this.clearTimeout(this.pressTimeout);
             this.pressTimeout = null;
         } else {
             this.pressTimeout = this.setTimeout(() => {
-                this.onSelect('single');
+                this.propagateOnSelect('single');
+                this.setColor('#f05e5d');
                 this.pressTimeout = null;
             }, DOUBLE_PRESS_DELAY);
         }
     }
 
-    onSelect(type) {
+    onLongPress() {
+        this.propagateOnSelect('long');
+        this.setColor('#CCC')
+    }
+
+    propagateOnSelect(type) {
         this.props.onSelect && this.props.onSelect({type: type, name: this.props.text});
     }
 
+    setColor(color) {
+        this.setState({
+            color
+        })
+    }
+
     getBubbleStyle() {
-        const random = Math.floor(Math.random() * 60) + 130;
+        const size = this.props.size;
         return {
-            width: random,
-            height: random,
-            borderRadius: random / 2
+            width: size,
+            height: size,
+            borderRadius: size / 2
         }
     }
 
     render() {
         return (
             <Button
-                onLongPress={() => {
-                    this.onSelect('long');
-                }}
+                onLongPress={() => this.onLongPress()}
                 onPress={() => this.onDoublePress()}
-                style={[styles.bubble, this.getBubbleStyle()]}>
+                style={[styles.bubble, this.getBubbleStyle(), {backgroundColor: this.state.color}]}>
                 <Text style={{color: '#fff', textAlign: 'center'}}>{this.props.text}</Text>
             </Button>
         )
@@ -50,7 +67,6 @@ export default class Bubble extends Component {
 
 const styles = StyleSheet.create({
     bubble: {
-        backgroundColor: '#D0789C',
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
