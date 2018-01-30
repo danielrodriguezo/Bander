@@ -6,8 +6,13 @@ import {AppStateActionCreator} from "../action-creators/app-state.action-creator
 import Loading from "./Loading";
 import Bubble from "./Bubble";
 import {UtilsService} from "../services/utils.service";
+import {UserService} from "../services/user.service";
+
 let musicStyles = ['Classic Rock', 'Alternative', 'Rock', 'Hip-Hop/Rap', 'Techno', 'Metal', 'Blues'];
 musicStyles = UtilsService.shuffle(musicStyles);
+
+let selectedMusicStyles = [];
+
 class PickStyles extends Component {
 
     componentDidMount() {
@@ -23,10 +28,31 @@ class PickStyles extends Component {
         this.props.toggleLoading();
     }
 
+    onBubbleSelect(data) {
+        switch (data.type) {
+            case 'long':
+                selectedMusicStyles.push({name: data.name, relation: 'dislike'});
+                return;
+            case 'single':
+                selectedMusicStyles.push({name: data.name, relation: 'like'});
+                return;
+            case 'double':
+                selectedMusicStyles.push({name: data.name, relation: 'love'});
+                return;
+        }
+    }
+
+    onPickStylesDone() {
+        if (selectedMusicStyles.length > 0) {
+            this.props.setUserStyles(selectedMusicStyles);
+        }
+    }
+
     render() {
         return (
             <ScrollView style={{padding: 15}}>
-                <Button transparent style={{marginTop: 15, flexDirection: 'row', alignSelf: 'flex-end', flex: 1}}>
+                <Button transparent style={{marginTop: 15, flexDirection: 'row', alignSelf: 'flex-end', flex: 1}}
+                    onPress={this.onPickStylesDone}>
                     <Text style={styles.done}>Done</Text>
                 </Button>
                 <Text style={styles.header}>Tell us what you're into.</Text>
@@ -36,14 +62,14 @@ class PickStyles extends Component {
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                     {
                         musicStyles.map((genre, index) => {
-                            return index % 2 === 0 && <Bubble text={genre} index={index} key={index} />
+                            return index % 2 === 0 && <Bubble text={genre} index={index} key={index} onSelect={this.onBubbleSelect}/>
                         })
                     }
                     </View>
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                     {
                         musicStyles.map((genre, index) => {
-                            return index % 2 === 1 && <Bubble text={genre} index={index} key={index} />
+                            return index % 2 === 1 && <Bubble text={genre} index={index} key={index} onSelect={this.onBubbleSelect}/>
                         })
                     }
                     </View>
@@ -85,6 +111,9 @@ const mapDispatchToProps = dispatch => {
     return {
         toggleLoading: () => {
             dispatch(AppStateActionCreator.toggleLoading())
+        },
+        setUserStyles: (styles) => {
+            dispatch(UserService.setUserStyles(styles))
         }
     }
 };

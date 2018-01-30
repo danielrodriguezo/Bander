@@ -1,4 +1,4 @@
-import {SIGN_UP, SIGN_IN, EXTRA_SIGNUP_DATA} from '../constants/action-names';
+import {SIGN_UP, SIGN_IN, EXTRA_SIGNUP_DATA, SET_USER_STYLES} from '../constants/action-names';
 
 export const UserActionCreator = {
     signUp: (payload) => ({
@@ -12,6 +12,10 @@ export const UserActionCreator = {
     extraSignupData: (payload) => ({
         type: EXTRA_SIGNUP_DATA,
         payload
+    }),
+    setUserStyles: (styles) => ({
+        type: SET_USER_STYLES,
+        styles
     })
 };
 

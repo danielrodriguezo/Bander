@@ -10,15 +10,19 @@ export default class Bubble extends Component {
 
     onDoublePress() {
         if (this.pressTimeout) {
-            console.log('double press');
+            this.onSelect('double');
             this.clearTimeout(this.pressTimeout);
             this.pressTimeout = null;
         } else {
             this.pressTimeout = this.setTimeout(() => {
-                console.log('single press');
+                this.onSelect('single');
                 this.pressTimeout = null;
             }, DOUBLE_PRESS_DELAY);
         }
+    }
+
+    onSelect(type) {
+        this.props.onSelect && this.props.onSelect({type: type, name: this.props.text});
     }
 
     getBubbleStyle() {
@@ -34,7 +38,7 @@ export default class Bubble extends Component {
         return (
             <Button
                 onLongPress={() => {
-                    console.log('long press');
+                    this.onSelect('long');
                 }}
                 onPress={() => this.onDoublePress()}
                 style={[styles.bubble, this.getBubbleStyle()]}>

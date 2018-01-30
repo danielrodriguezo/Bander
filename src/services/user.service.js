@@ -79,5 +79,17 @@ export const UserService = {
             dispatch(AppStateActionCreator.raiseError(false));
             dispatch(NavigationActions.navigate({routeName: 'PickStyles'}));
         }
+    },
+    setUserStyles: (styles) => {
+        return (dispatch) => {
+            dispatch(UserActionCreator.setUserStyles(styles));
+            dispatch(AppStateActionCreator.toggleLoading(false));
+            dispatch(NavigationActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({routeName: 'Search'})
+                ]
+            }));
+        }
     }
 };
