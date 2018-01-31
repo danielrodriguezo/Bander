@@ -21,12 +21,50 @@ import {AppStateActionCreator} from "../action-creators/app-state.action-creator
 import Error from "./Error";
 import {UserService} from "../services/user.service";
 import Loading from "./Loading";
+import Config from 'react-native-config';
 
 class ExtraSignUpData extends Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentCity: ''
+        }
+    }
     componentDidMount() {
         this.props.raiseError(false);
         this.firstName._root.focus();
+        this.getGeoLocation();
+    }
+
+    getGeoLocation() {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const coords = position.coords;
+            const location = await this.getLocationByCoords(coords);
+            this.setState({
+                currentCity: this.parseGeoLocation(location)
+            });
+        }, (error) => {
+            console.log(error);
+        }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
+    }
+
+    parseGeoLocation(locations) {
+        const city = locations.find((location) => {
+            return location.types.includes('locality') || location.types.includes('political');
+        });
+        return city ? city.formatted_address || '' : '';
+    }
+
+    getLocationByCoords(coords) {
+        return fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`)
+            .then(async (response) => response.json())
+            .then((json) => {
+                return json && json.status === 'OK' ? json.results || [] : [];
+            })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            });
     }
 
     _focusInput(inputField) {
@@ -84,6 +122,7 @@ class ExtraSignUpData extends Component {
                                         <Label>City</Label>
                                         <Input getRef={(c) => this.city = c}
                                                autoCorrect={false}
+                                               value={this.state.currentCity}
                                                onSubmitEditing={() => this.setExtraSignupData()}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
@@ -156,7 +195,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         raiseError: (status, message) => {
-            dispatch(AppStateActionCreator.raiseError(status,message));
+            dispatch(AppStateActionCreator.raiseError(status, message));
         },
         toggleLoading: () => {
             dispatch(AppStateActionCreator.toggleLoading())
