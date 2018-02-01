@@ -21,50 +21,34 @@ import {AppStateActionCreator} from "../action-creators/app-state.action-creator
 import Error from "./Error";
 import {UserService} from "../services/user.service";
 import Loading from "./Loading";
-import Config from 'react-native-config';
+import {GeoLocationService} from "../services/geo-location.service";
 
 class ExtraSignUpData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentCity: ''
+            currentCity: {
+                name: '',
+                id: ''
+            },
+            currentCountry: {
+                name: '',
+                id: ''
+            }
         }
     }
+
     componentDidMount() {
         this.props.raiseError(false);
         this.firstName._root.focus();
-        this.getGeoLocation();
+        GeoLocationService.getLocation(this.getGeoLocation.bind(this));
     }
 
-    getGeoLocation() {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const coords = position.coords;
-            const location = await this.getLocationByCoords(coords);
-            this.setState({
-                currentCity: this.parseGeoLocation(location)
-            });
-        }, (error) => {
-            console.log(error);
-        }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
-    }
-
-    parseGeoLocation(locations) {
-        const city = locations.find((location) => {
-            return location.types.includes('locality') || location.types.includes('political');
+    getGeoLocation({city, country}) {
+        this.setState({
+            currentCountry: country,
+            currentCity: city
         });
-        return city ? city.formatted_address || '' : '';
-    }
-
-    getLocationByCoords(coords) {
-        return fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&key=${Config.GOOGLE_MAPS_API_KEY}`)
-            .then(async (response) => response.json())
-            .then((json) => {
-                return json && json.status === 'OK' ? json.results || [] : [];
-            })
-            .catch((err) => {
-                console.error(err);
-                return [];
-            });
     }
 
     _focusInput(inputField) {
@@ -73,6 +57,10 @@ class ExtraSignUpData extends Component {
 
     toggleLoading() {
         this.props.toggleLoading();
+    }
+
+    searchForCity() {
+        //this.props.searchForCity(this.state.currentCity);
     }
 
     setExtraSignupData() {
@@ -115,6 +103,7 @@ class ExtraSignUpData extends Component {
                                         <Label>Country</Label>
                                         <Input getRef={(c) => this.country = c}
                                                autoCorrect={false}
+                                               value={this.state.currentCountry.name}
                                                onSubmitEditing={() => this._focusInput('city')}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
@@ -122,7 +111,8 @@ class ExtraSignUpData extends Component {
                                         <Label>City</Label>
                                         <Input getRef={(c) => this.city = c}
                                                autoCorrect={false}
-                                               value={this.state.currentCity}
+                                               onPress={() => this.searchForCity()}
+                                               value={this.state.currentCity.name}
                                                onSubmitEditing={() => this.setExtraSignupData()}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
