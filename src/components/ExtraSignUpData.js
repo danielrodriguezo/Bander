@@ -34,7 +34,9 @@ class ExtraSignUpData extends Component {
             currentCountry: {
                 name: '',
                 id: ''
-            }
+            },
+            countries: [],
+            cities: []
         }
     }
 
@@ -59,8 +61,18 @@ class ExtraSignUpData extends Component {
         this.props.toggleLoading();
     }
 
-    searchForCity() {
-        //this.props.searchForCity(this.state.currentCity);
+    async searchForCountry() {
+        const countries = await GeoLocationService.searchCountry(this.state.currentCountry.name);
+        this.setState({
+            countries
+        });
+    }
+
+    async searchForCity() {
+        const cities = await GeoLocationService.searchCity(this.state.currentCity.name);
+        this.setState({
+            cities
+        })
     }
 
     setExtraSignupData() {
@@ -103,15 +115,17 @@ class ExtraSignUpData extends Component {
                                         <Label>Country</Label>
                                         <Input getRef={(c) => this.country = c}
                                                autoCorrect={false}
+                                               onChange={() => this.searchForCountry()}
                                                value={this.state.currentCountry.name}
                                                onSubmitEditing={() => this._focusInput('city')}
                                                style={{fontWeight: '300'}}/>
+
                                     </Item>
                                     <Item floatingLabel style={{width: '90%'}}>
                                         <Label>City</Label>
                                         <Input getRef={(c) => this.city = c}
                                                autoCorrect={false}
-                                               onPress={() => this.searchForCity()}
+                                               onChange={() => this.searchForCity()}
                                                value={this.state.currentCity.name}
                                                onSubmitEditing={() => this.setExtraSignupData()}
                                                style={{fontWeight: '300'}}/>

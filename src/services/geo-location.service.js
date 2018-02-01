@@ -22,7 +22,7 @@ export const GeoLocationService = {
             result = GeoLocationService.parseGeoLocation(location);
             callback(result);
         }, (error) => {
-            console.log(error);
+            console.error(error);
             callback(result);
         }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000});
     },
@@ -55,5 +55,31 @@ export const GeoLocationService = {
             id: country && country.place_id ? country.place_id : ''
         };
         return result;
+    },
+    searchCountry: (name) => {
+        name = encodeURIComponent(name);
+        return fetch(`${config.GOOGLE_PLACES_API_URL}${name}&regions=(country)&key=${config.GOOGLE_API_KEY}`)
+            .then(async (response) => {
+                response.json()
+            })
+            .then((json) => {
+                return json && json.status === 'OK' ? json.predictions || [] : [];
+            })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            })
+    },
+    searchCity: (name) => {
+        name = encodeURIComponent(name);
+        return fetch(`${config.GOOGLE_PLACES_API_URL}${name}&types=(cities)&key=${config.GOOGLE_API_KEY}`)
+            .then(async (response) => response.json())
+            .then((json) => {
+                return json && json.status === 'OK' ? json.predictions || [] : [];
+            })
+            .catch((err) => {
+                console.error(err);
+                return [];
+            })
     }
 };
