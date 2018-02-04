@@ -33,6 +33,7 @@ class ExtraSignUpData extends Component {
             },
             currentCountry: {
                 name: '',
+                shortName: '',
                 id: ''
             },
             countries: [],
@@ -44,6 +45,30 @@ class ExtraSignUpData extends Component {
         this.props.raiseError(false);
         this.firstName._root.focus();
         GeoLocationService.getLocation(this.getGeoLocation.bind(this));
+    }
+
+    async setCountry(country) {
+        const countryExtraDetails = await GeoLocationService.getCountryDetails(country);
+        this.setState({
+            currentCountry: {
+                name: country.description,
+                shortName: countryExtraDetails.address_components[0].short_name,
+                id: country.place_id
+            },
+            currentCity: {
+                name: '',
+                id: ''
+            }
+        })
+    }
+
+    setCity(city) {
+        this.setState({
+            currentCity: {
+                name: city.description,
+                id: city.place_id
+            }
+        })
     }
 
     getGeoLocation({city, country}) {
@@ -61,31 +86,18 @@ class ExtraSignUpData extends Component {
         this.props.toggleLoading();
     }
 
-    async searchForCountry() {
-        const countries = await GeoLocationService.searchCountry(this.state.currentCountry.name);
-        this.setState({
-            countries
-        });
-    }
-
-    async searchForCity() {
-        const cities = await GeoLocationService.searchCity(this.state.currentCity.name);
-        this.setState({
-            cities
-        })
-    }
-
     setExtraSignupData() {
         this.toggleLoading();
         const firstName = this.firstName.props.value;
         const lastName = this.lastName.props.value;
-        const country = this.country.props.value;
-        const city = this.city.props.value;
+        const country = this.state.currentCountry;
+        const city = this.state.currentCity;
         this.props.extraSignupData({firstName, lastName, country, city});
     }
 
     render() {
         return (
+
             <ScrollView>
                 <View>
                     <LinearGradient
@@ -108,27 +120,38 @@ class ExtraSignUpData extends Component {
                                         <Label>Last Name</Label>
                                         <Input getRef={(c) => this.lastName = c}
                                                autoCorrect={false}
-                                               onSubmitEditing={() => this._focusInput('country')}
                                                style={{fontWeight: '300'}}/>
                                     </Item>
-                                    <Item floatingLabel style={{width: '90%'}}>
-                                        <Label>Country</Label>
-                                        <Input getRef={(c) => this.country = c}
-                                               autoCorrect={false}
-                                               onChange={() => this.searchForCountry()}
-                                               value={this.state.currentCountry.name}
-                                               onSubmitEditing={() => this._focusInput('city')}
-                                               style={{fontWeight: '300'}}/>
-
+                                    <Item style={styles.item}>
+                                        <Label style={styles.label}>Country</Label>
+                                        <Button transparent style={styles.areaSelection}
+                                                onPress={() => this.props.navigation.navigate('OptionsSelector', {
+                                                    fromRoute: 'ExtraSignUpData',
+                                                    searchFn: GeoLocationService.searchCountry,
+                                                    name: 'country',
+                                                    callback: this.setCountry.bind(this)
+                                                })}>
+                                            <Text style={{
+                                                fontSize: 17,
+                                                color: '#575757'
+                                            }}>{this.state.currentCountry.name || 'Select'}</Text>
+                                        </Button>
                                     </Item>
-                                    <Item floatingLabel style={{width: '90%'}}>
-                                        <Label>City</Label>
-                                        <Input getRef={(c) => this.city = c}
-                                               autoCorrect={false}
-                                               onChange={() => this.searchForCity()}
-                                               value={this.state.currentCity.name}
-                                               onSubmitEditing={() => this.setExtraSignupData()}
-                                               style={{fontWeight: '300'}}/>
+                                    <Item style={styles.item}>
+                                        <Label style={styles.label}>City</Label>
+                                        <Button transparent style={styles.areaSelection}
+                                                onPress={() => this.state.currentCountry.name && this.props.navigation.navigate('OptionsSelector', {
+                                                    fromRoute: 'ExtraSignUpData',
+                                                    searchFn: GeoLocationService.searchCity,
+                                                    searchParam: this.state.currentCountry.shortName,
+                                                    name: 'city',
+                                                    callback: this.setCity.bind(this)
+                                                })}>
+                                            <Text style={{
+                                                fontSize: 17,
+                                                color: '#575757'
+                                            }}>{this.state.currentCity.name || 'Select'}</Text>
+                                        </Button>
                                     </Item>
                                 </Form>
                                 </Body>
@@ -144,6 +167,7 @@ class ExtraSignUpData extends Component {
                 </View>
                 <Loading/>
             </ScrollView>
+
         )
     }
 }
@@ -186,6 +210,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row'
+    },
+    item: {
+        flexDirection: 'column', marginTop: 15, alignItems: 'stretch', flex: 1
+    },
+    label: {
+        color: '#8e8e8e', fontSize: 15
+    },
+    areaSelection: {
+        flexDirection: 'row', flex: 1, width: '90%'
     }
 });
 

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-navigation';
 import {Button, Form, Icon, Input, Item, Label} from 'native-base';
 import {connect} from 'react-redux';
 import {UserService} from "../services/user.service";
@@ -26,68 +27,77 @@ class Login extends Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.content}>
-                    <Image style={styles.image} source={require('../assets/login_back.jpg')}/>
-                    <Image source={require('../assets/bander_logo.png')}
-                           style={{position: 'absolute', marginTop: 15, flex: 1, alignSelf: 'center', width: 200, height: 150}}/>
-                </View>
-                <View style={styles.container}>
-                    <Text style={styles.header}>Login</Text>
-                    <Error/>
-                    <Form>
-                        <Item floatingLabel style={{marginTop: 10}}>
-                            <Label>Email</Label>
-                            <Input getRef={(c) => this.emailInput = c}
-                                   keyboardType='email-address'
-                                   autoCorrect={false}
-                                   autoCapitalize='none'
-                                   onSubmitEditing={() => this._focusInput('passwordInput')}
-                                   style={{fontWeight: '300'}}/>
-                        </Item>
-                        <Item floatingLabel>
-                            <Label>Password</Label>
-                            <Input secureTextEntry
-                                   keyboardType='default'
-                                   autoCapitalize='none'
-                                   returnKeyType='go'
-                                   getRef={(c) => this.passwordInput = c}
-                                   onSubmitEditing={() => this.signIn()}
-                                   style={{fontWeight: '300'}}/>
-                        </Item>
-                        <Button transparent style={{alignSelf: 'flex-end', marginTop: 10}}>
-                            <Text style={styles.forgot}>Forgot Password?</Text>
-                        </Button>
-                        <Button style={styles.button}
-                                onPress={() => this.signIn()}>
-                            <Text style={{color: '#fff', fontWeight: '300'}}>
-                                SIGN IN
-                            </Text>
-                        </Button>
-                    </Form>
-                    <View style={styles.continueWith}>
-                        <Text style={styles.line}>------------</Text>
-                        <Text style={styles.continueWithText}> Or Continue With </Text>
-                        <Text style={styles.line}>------------</Text>
+            <SafeAreaView>
+                <ScrollView>
+                    <View style={styles.content}>
+                        <Image style={styles.image} source={require('../assets/login_back.jpg')}/>
+                        <Image source={require('../assets/bander_logo.png')}
+                               style={{
+                                   position: 'absolute',
+                                   marginTop: 15,
+                                   flex: 1,
+                                   alignSelf: 'center',
+                                   width: 200,
+                                   height: 150
+                               }}/>
                     </View>
-                    <View style={styles.continueWith}>
-                        <Button style={styles.facebook}>
-                            <Icon name='logo-facebook'/>
-                        </Button>
-                        <Button style={styles.google}>
-                            <Icon name='logo-google'/>
-                        </Button>
+                    <View style={styles.container}>
+                        <Text style={styles.header}>Login</Text>
+                        <Error/>
+                        <Form>
+                            <Item floatingLabel style={{marginTop: 10}}>
+                                <Label>Email</Label>
+                                <Input getRef={(c) => this.emailInput = c}
+                                       keyboardType='email-address'
+                                       autoCorrect={false}
+                                       autoCapitalize='none'
+                                       onSubmitEditing={() => this._focusInput('passwordInput')}
+                                       style={{fontWeight: '300'}}/>
+                            </Item>
+                            <Item floatingLabel>
+                                <Label>Password</Label>
+                                <Input secureTextEntry
+                                       keyboardType='default'
+                                       autoCapitalize='none'
+                                       returnKeyType='go'
+                                       getRef={(c) => this.passwordInput = c}
+                                       onSubmitEditing={() => this.signIn()}
+                                       style={{fontWeight: '300'}}/>
+                            </Item>
+                            <Button transparent style={{alignSelf: 'flex-end', marginTop: 10}}>
+                                <Text style={styles.forgot}>Forgot Password?</Text>
+                            </Button>
+                            <Button style={styles.button}
+                                    onPress={() => this.signIn()}>
+                                <Text style={{color: '#fff', fontWeight: '300'}}>
+                                    SIGN IN
+                                </Text>
+                            </Button>
+                        </Form>
+                        <View style={styles.continueWith}>
+                            <Text style={styles.line}>------------</Text>
+                            <Text style={styles.continueWithText}> Or Continue With </Text>
+                            <Text style={styles.line}>------------</Text>
+                        </View>
+                        <View style={styles.continueWith}>
+                            <Button style={styles.facebook}>
+                                <Icon name='logo-facebook'/>
+                            </Button>
+                            <Button style={styles.google}>
+                                <Icon name='logo-google'/>
+                            </Button>
+                        </View>
+                        <View style={[styles.continueWith, {marginBottom: 20}]}>
+                            <Text style={{fontWeight: '300'}}>Don't have an account?</Text>
+                            <Button style={{marginLeft: 10, backgroundColor: '#D0789C'}}
+                                    onPress={() => this.props.navigation.navigate('Signup')}>
+                                <Text style={{color: '#fff', fontWeight: '300', padding: 5}}>SIGN UP</Text>
+                            </Button>
+                        </View>
                     </View>
-                    <View style={[styles.continueWith, {marginBottom: 20}]}>
-                        <Text style={{fontWeight: '300'}}>Don't have an account?</Text>
-                        <Button style={{marginLeft: 10, backgroundColor: '#D0789C'}}
-                                onPress={() => this.props.navigation.navigate('Signup')}>
-                            <Text style={{color: '#fff', fontWeight: '300', padding: 5}}>SIGN UP</Text>
-                        </Button>
-                    </View>
-                </View>
-                <Loading/>
-            </ScrollView>
+                    <Loading/>
+                </ScrollView>
+            </SafeAreaView>
         )
     }
 }

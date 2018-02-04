@@ -59,9 +59,7 @@ export const GeoLocationService = {
     searchCountry: (name) => {
         name = encodeURIComponent(name);
         return fetch(`${config.GOOGLE_PLACES_API_URL}${name}&regions=(country)&key=${config.GOOGLE_API_KEY}`)
-            .then(async (response) => {
-                response.json()
-            })
+            .then((response) => response.json())
             .then((json) => {
                 return json && json.status === 'OK' ? json.predictions || [] : [];
             })
@@ -70,16 +68,27 @@ export const GeoLocationService = {
                 return [];
             })
     },
-    searchCity: (name) => {
+    searchCity: (name, country) => {
         name = encodeURIComponent(name);
-        return fetch(`${config.GOOGLE_PLACES_API_URL}${name}&types=(cities)&key=${config.GOOGLE_API_KEY}`)
-            .then(async (response) => response.json())
+        return fetch(`${config.GOOGLE_PLACES_API_URL}${name}&types=(cities)&components=country:${country}&key=${config.GOOGLE_API_KEY}`)
+            .then((response) => response.json())
             .then((json) => {
                 return json && json.status === 'OK' ? json.predictions || [] : [];
             })
             .catch((err) => {
                 console.error(err);
                 return [];
+            })
+    },
+    getCountryDetails: (country) => {
+        return fetch (`${config.GOOGLE_PLACES_DETAILS_API_URL}${country.place_id}&key=${config.GOOGLE_API_KEY}`)
+            .then((response) => response.json())
+            .then((json) => {
+                return json && json.status === 'OK' ? json.result || country : country;
+            })
+            .catch((err) => {
+                console.error(err);
+                return country;
             })
     }
 };
