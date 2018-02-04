@@ -29,6 +29,8 @@ class Login extends Component {
             <ScrollView>
                 <View style={styles.content}>
                     <Image style={styles.image} source={require('../assets/login_back.jpg')}/>
+                    <Image source={require('../assets/bander_logo.png')}
+                           style={{position: 'absolute', marginTop: 15, flex: 1, alignSelf: 'center', width: 200, height: 150}}/>
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.header}>Login</Text>
